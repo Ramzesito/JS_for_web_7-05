@@ -38,26 +38,11 @@ After(async function () {
 // });
 
   Given("user is on place shoosing page for tomorrow {string} movie", async function (string) {
-    // return await this.page.goto(`https://netology.ru${string}`, {
-    //   setTimeout: 20000,
-    // });
-
     await clickElement(this.page, "body > nav > a:nth-child(2) > span.page-nav__day-number");
     await clickElement(this.page, `body > main > section:nth-child(${string}) > div:nth-child(2) > ul > li > a`);
-    //return "pending...";
-
-    // const placeSelector = `body > main > section > div.buying-scheme > div.buying-scheme__wrapper > div:nth-child(${buyingScheme[0].row}) > span:nth-child(${buyingScheme[0].place})`;
-    // await clickElement(page, placeSelector);
-    // await clickElement(page, "button.acceptin-button");
-      
-    // let actualCaptionText = await getText(page, "h2.ticket__check-title");
-    // await expect(actualCaptionText).toContain("Вы выбрали билеты:");
-    // let actualTicketsChairs = await getText(page, "span.ticket__chairs");
-    // await expect(actualTicketsChairs).toContain(`${buyingScheme[0].row}/${buyingScheme[0].place}`);
-
   });
 
-  When("user choose one ticket at {string} row, {string} place", async function (row, place) {
+  When("user choose one ticket at row {string} and place {string}", async function (row, place) {
       const placeSelector = `body > main > section > div.buying-scheme > div.buying-scheme__wrapper > div:nth-child(${row}) > span:nth-child(${place})`;
       await clickElement(this.page, placeSelector);
       await clickElement(this.page, "button.acceptin-button");
@@ -68,5 +53,4 @@ After(async function () {
       await expect(actualCaptionText).contains(notice);
       let actualTicketsChairs = await getText(this.page, "span.ticket__chairs");
       await expect(actualTicketsChairs).contains(position);
-
   });

@@ -7,5 +7,10 @@
 Feature: Buying tickets tests
     Scenario: should successfully buy for tomorrow 1st movie (1 ticket)
         Given user is on place shoosing page for tomorrow "1" movie
-        When user choose one ticket at "5" row, "6" place
+        When user choose one ticket at row "5" and place "6"
+        Then user sees his tickets selected with notice "Вы выбрали билеты:", "5/6"
+        
+    Scenario: should successfully buy for tomorrow 1st movie (1 ticket)
+        Given user is on place shoosing page for tomorrow "2" movie
+        When user choose one ticket at row "5" and place "6"
         Then user sees his tickets selected with notice "Вы выбрали билеты:", "5/6"
