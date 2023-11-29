@@ -21,36 +21,51 @@ After(async function () {
   }
 });
 
-// Given("user is on {string} page", async function (string) {
-//   return await this.page.goto(`https://netology.ru${string}`, {
-//     setTimeout: 20000,
-//   });
-// });
-
-// When("user search by {string}", async function (string) {
-//   return await putText(this.page, "input", string);
-// });
-
-// Then("user sees the course suggested {string}", async function (string) {
-//   const actual = await getText(this.page, "a[data-name]");
-//   const expected = await string;
-//   expect(actual).contains(expected);
-// });
-
-  Given("user is on place shoosing page for tomorrow {string} movie", async function (string) {
+  Given("user is on place choosing page for tomorrow {string} movie", async function (string) {
     await clickElement(this.page, "body > nav > a:nth-child(2) > span.page-nav__day-number");
     await clickElement(this.page, `body > main > section:nth-child(${string}) > div:nth-child(2) > ul > li > a`);
   });
 
-  When("user choose one ticket at row {string} and place {string}", async function (row, place) {
-      const placeSelector = `body > main > section > div.buying-scheme > div.buying-scheme__wrapper > div:nth-child(${row}) > span:nth-child(${place})`;
-      await clickElement(this.page, placeSelector);
-      await clickElement(this.page, "button.acceptin-button");
+  When("user chooses one ticket at row {string} and place {string}", async function (row, place) {
+    const placeSelector = `body > main > section > div.buying-scheme > div.buying-scheme__wrapper > div:nth-child(${row}) > span:nth-child(${place})`;
+    await clickElement(this.page, placeSelector);
+    await clickElement(this.page, "button.acceptin-button");
   });
 
   Then("user sees his tickets selected with notice {string}, {string}", async function (notice, position) {
-      let actualCaptionText = await getText(this.page, "h2.ticket__check-title");
-      await expect(actualCaptionText).contains(notice);
-      let actualTicketsChairs = await getText(this.page, "span.ticket__chairs");
-      await expect(actualTicketsChairs).contains(position);
+    let actualCaptionText = await getText(this.page, "h2.ticket__check-title");
+    await expect(actualCaptionText).contains(notice);
+    let actualTicketsChairs = await getText(this.page, "span.ticket__chairs");
+    await expect(actualTicketsChairs).contains(position);
+  });
+
+  Given("user is on place choosing page for aftertomorrow {string} movie", async function (string) {
+    await clickElement(this.page, "body > nav > a:nth-child(3) > span.page-nav__day-number");
+    await clickElement(this.page, `body > main > section:nth-child(${string}) > div:nth-child(2) > ul > li > a`);
+  });
+
+  When("user chooses three tickets at rows {string},{string},{string} and places {string},{string},{string}", async function (row1, row2, row3, place1, place2, place3) {
+    let placeSelector = `body > main > section > div.buying-scheme > div.buying-scheme__wrapper > div:nth-child(${row1}) > span:nth-child(${place1})`;
+    await clickElement(this.page, placeSelector);
+    placeSelector = `body > main > section > div.buying-scheme > div.buying-scheme__wrapper > div:nth-child(${row2}) > span:nth-child(${place2})`;
+    await clickElement(this.page, placeSelector);
+    placeSelector = `body > main > section > div.buying-scheme > div.buying-scheme__wrapper > div:nth-child(${row3}) > span:nth-child(${place3})`;
+    await clickElement(this.page, placeSelector);
+    await clickElement(this.page, "button.acceptin-button");
+  });
+
+  When("user buys selected tickets", async function () {
+    await clickElement(this.page, "button.acceptin-button");
+    const actualCaptionText = await getText(this.page, "h2.ticket__check-title");
+    await expect(actualCaptionText).contains("Электронный билет");
+  });
+
+  Then("user can not buy tickets, button disabled", async function () {
+    const dis = await this.page.$eval("button.acceptin-button", btn =>  btn.disabled);
+    await expect(dis).equals(true);
+  });
+
+  When("user returns main page", async function () {
+    await this.page.goto("https://qamid.tmweb.ru/client/index.php");
+    await this.page.waitForSelector("h1");
   });
